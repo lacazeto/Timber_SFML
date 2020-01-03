@@ -1,11 +1,12 @@
 #include "stdafx.h"
+#include <sstream>
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
 
 int main()
 {
-    // INITIALIZING
+    /* -- INITIALIZING -- */
     VideoMode vm = VideoMode::getFullscreenModes()[0];
 
     RenderWindow window(vm, "Timber!", Style::Fullscreen);
@@ -18,6 +19,31 @@ int main()
     bool paused = true;
 
     srand((int)time(0) * 10);
+
+    int score = 0;
+
+    // COPIES
+    Font font;
+    font.loadFromFile("fonts/KOMIKAP_.ttf");
+
+    std::stringstream ss;
+    ss << "Score =" << score;
+    sf::Text scoreText;
+    scoreText.setFont(font);
+    scoreText.setString(ss.str());
+    scoreText.setCharacterSize(100);
+    scoreText.setFillColor(Color::White);
+    scoreText.setPosition(20, 20);
+
+    sf::Text MessageText;
+    MessageText.setFont(font);
+    MessageText.setString("Press 'Enter' to start!");
+    MessageText.setCharacterSize(75);
+    MessageText.setFillColor(Color::White);
+
+    FloatRect textRect = MessageText.getLocalBounds();
+    MessageText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+    MessageText.setPosition(vm.width / 2.0f, vm.height / 2.0f);
 
     // TEXTURES
     Texture textureBackground;
@@ -68,6 +94,7 @@ int main()
     float cloud2Speed = 0.0f;
     float cloud3Speed = 0.0f;
 
+    /* -- EXECUTING -- */
     while (window.isOpen())
     {
         if (Keyboard::isKeyPressed(Keyboard::Escape))
@@ -79,7 +106,6 @@ int main()
         {
             paused = !paused;
         }
-
 
         // CLEAR SCENE
         window.clear();
@@ -108,7 +134,7 @@ int main()
 
             if (!cloud1Active)
             {
-                cloud1Speed = (rand() % 50);
+                cloud1Speed = (rand() % 50) + 25;
                 float height = (rand() % 300) * scaleHeight;
 
                 spriteCloud1.setPosition(-200, height * scaleHeight);
@@ -125,7 +151,7 @@ int main()
 
             if (!cloud2Active)
             {
-                cloud2Speed = (rand() % 50);
+                cloud2Speed = (rand() % 50) + 25;
                 float height = (rand() % 300) * scaleHeight;
 
                 spriteCloud2.setPosition(-200, height * scaleHeight);
@@ -142,7 +168,7 @@ int main()
 
             if (!cloud3Active)
             {
-                cloud3Speed = (rand() % 50);
+                cloud3Speed = (rand() % 50) + 25;
                 float height = (rand() % 300) * scaleHeight;
 
                 spriteCloud3.setPosition(-200, height * scaleHeight);
@@ -166,6 +192,11 @@ int main()
         window.draw(spriteCloud3);
         window.draw(spriteTree);
         window.draw(spriteBee);
+        window.draw(scoreText);
+        if (paused)
+        {
+            window.draw(MessageText);
+        }
 
         window.display();
     }
