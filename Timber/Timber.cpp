@@ -40,7 +40,7 @@ int main()
 
         Sprite spriteTree;
         spriteTree.setTexture(textureTree);
-        spriteTree.setPosition(vm.width/2, 0);
+        spriteTree.setPosition(vm.width/2 - (150 * scalewidth), 0);
         spriteTree.scale(sf::Vector2f(scalewidth, scaleHeight));
 
         Sprite spriteCloud1;
@@ -50,15 +50,15 @@ int main()
         spriteCloud2.setTexture(textureCloud);
         spriteCloud3.setTexture(textureCloud);
         spriteCloud1.setPosition(0, 0);
-        spriteCloud2.setPosition(0, 50);
-        spriteCloud3.setPosition(0, 100);
+        spriteCloud2.setPosition(0, 150 * scaleHeight);
+        spriteCloud3.setPosition(0, 300 * scaleHeight);
         spriteCloud1.scale(sf::Vector2f(scalewidth, scaleHeight));
         spriteCloud2.scale(sf::Vector2f(scalewidth, scaleHeight));
         spriteCloud3.scale(sf::Vector2f(scalewidth, scaleHeight));
 
         Sprite spriteBee;
         spriteBee.setTexture(textureBee);
-        spriteBee.setPosition(0, vm.height / 4 * 3);
+        spriteBee.setPosition(0, 800 * scaleHeight);
         spriteBee.scale(sf::Vector2f(scalewidth, scaleHeight));
 
         // SPRITES LOGIC
