@@ -11,23 +11,36 @@ int main()
 
     RenderWindow window(vm, "Timber!", Style::Fullscreen);
 
-    float scalewidth = (vm.width) / 1920.f;
+    float scaleWidth = (vm.width) / 1920.f;
     float scaleHeight = (vm.height) / 1080.f;
-
-    Clock clock;
 
     bool paused = true;
 
-    srand((int)time(0) * 10);
-
     int score = 0;
+
+    const float INITIAL_TIME = 10.0f;
+
+    // GAME TIME
+    Clock clock;
+
+    Time gameTimetotal;
+    float timeRemaining = INITIAL_TIME;
+
+    RectangleShape timeBar;
+    float timeBarStartWidth = 400 * scaleWidth;
+    float timeBarHeight = 40 * scaleHeight;
+    timeBar.setSize(Vector2f(timeBarStartWidth, timeBarHeight));
+    timeBar.setFillColor(Color::Red);
+    timeBar.setPosition(vm.width / 2 - (timeBarStartWidth / 2), 980 * scaleHeight);
+
+    float timeBarWidthPerSecond = timeBarStartWidth / timeRemaining;
 
     // COPIES
     Font font;
     font.loadFromFile("fonts/KOMIKAP_.ttf");
 
     std::stringstream ss;
-    ss << "Score =" << score;
+    ss << "Score = " << score;
     sf::Text scoreText;
     scoreText.setFont(font);
     scoreText.setString(ss.str());
@@ -62,12 +75,12 @@ int main()
     Sprite spriteBackground;
     spriteBackground.setTexture(textureBackground);
     spriteBackground.setPosition(0, 0);
-    spriteBackground.scale(sf::Vector2f(scalewidth, scaleHeight));
+    spriteBackground.scale(sf::Vector2f(scaleWidth, scaleHeight));
 
     Sprite spriteTree;
     spriteTree.setTexture(textureTree);
-    spriteTree.setPosition(vm.width / 2 - (150 * scalewidth), 0);
-    spriteTree.scale(sf::Vector2f(scalewidth, scaleHeight));
+    spriteTree.setPosition(vm.width / 2 - (150 * scaleWidth), 0);
+    spriteTree.scale(sf::Vector2f(scaleWidth, scaleHeight));
 
     Sprite spriteCloud1;
     Sprite spriteCloud2;
@@ -75,13 +88,13 @@ int main()
     spriteCloud1.setTexture(textureCloud);
     spriteCloud2.setTexture(textureCloud);
     spriteCloud3.setTexture(textureCloud);
-    spriteCloud1.scale(sf::Vector2f(scalewidth, scaleHeight));
-    spriteCloud2.scale(sf::Vector2f(scalewidth, scaleHeight));
-    spriteCloud3.scale(sf::Vector2f(scalewidth, scaleHeight));
+    spriteCloud1.scale(sf::Vector2f(scaleWidth, scaleHeight));
+    spriteCloud2.scale(sf::Vector2f(scaleWidth, scaleHeight));
+    spriteCloud3.scale(sf::Vector2f(scaleWidth, scaleHeight));
 
     Sprite spriteBee;
     spriteBee.setTexture(textureBee);
-    spriteBee.scale(sf::Vector2f(scalewidth, scaleHeight));
+    spriteBee.scale(sf::Vector2f(scaleWidth, scaleHeight));
 
     // SPRITES INITIAL LOGIC
     bool beeActive = false;
@@ -97,6 +110,8 @@ int main()
     /* -- EXECUTING -- */
     while (window.isOpen())
     {
+        srand((int)time(0) * 10);
+
         if (Keyboard::isKeyPressed(Keyboard::Escape))
         {
             window.close();
@@ -105,6 +120,8 @@ int main()
         if (Keyboard::isKeyPressed(Keyboard::Return))
         {
             paused = !paused;
+            score = 0;
+            timeRemaining = INITIAL_TIME;
         }
 
         // CLEAR SCENE
@@ -114,6 +131,9 @@ int main()
         if (!paused)
         {
             Time dt = clock.restart();
+
+            timeRemaining -= dt.asSeconds();
+            timeBar.setSize(Vector2f(timeBarWidthPerSecond * timeRemaining, timeBarHeight));
 
             if (!beeActive)
             {
@@ -183,6 +203,15 @@ int main()
                 }
             }
 
+            if (timeRemaining <= 0.0f)
+            {
+                paused = true;
+
+                MessageText.setString("Out of time!");
+                textRect = MessageText.getLocalBounds();
+                MessageText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+            }
+
         }
 
         // DRAW SCENE
@@ -192,10 +221,14 @@ int main()
         window.draw(spriteCloud3);
         window.draw(spriteTree);
         window.draw(spriteBee);
-        window.draw(scoreText);
         if (paused)
         {
             window.draw(MessageText);
+        }
+        else
+        {
+            window.draw(scoreText);
+            window.draw(timeBar);
         }
 
         window.display();
