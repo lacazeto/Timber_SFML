@@ -15,6 +15,8 @@ int main()
 
     Clock clock;
 
+    bool paused = true;
+
     srand((int)time(0) * 10);
 
     // TEXTURES
@@ -73,78 +75,88 @@ int main()
             window.close();
         }
 
+        if (Keyboard::isKeyPressed(Keyboard::Return))
+        {
+            paused = !paused;
+        }
+
+
         // CLEAR SCENE
         window.clear();
 
         // UPDATE SCENE
-        Time dt = clock.restart();
-
-        if (!beeActive)
+        if (!paused)
         {
-            beeSpeed = (rand() % 200) + 200;
-            float height = (rand() % 500) + 500;
+            Time dt = clock.restart();
 
-            spriteBee.setPosition(vm.width, height * scaleHeight);
-            beeActive = true;
-        }
-        else
-        {
-            spriteBee.setPosition(spriteBee.getPosition().x - (beeSpeed * dt.asSeconds()), spriteBee.getPosition().y);
-            if (spriteBee.getPosition().x < -100)
+            if (!beeActive)
             {
-                beeActive = false;
+                beeSpeed = (rand() % 200) + 200;
+                float height = (rand() % 500) + 500;
+
+                spriteBee.setPosition(vm.width, height * scaleHeight);
+                beeActive = true;
             }
-        }
-
-        if (!cloud1Active)
-        {
-            cloud1Speed = (rand() % 200) + 200;
-            float height = (rand() % 300) * scaleHeight;
-
-            spriteCloud1.setPosition(-200, height * scaleHeight);
-            cloud1Active = true;
-        }
-        else
-        {
-            spriteCloud1.setPosition(spriteCloud1.getPosition().x + (cloud1Speed * dt.asSeconds()), spriteCloud1.getPosition().y);
-            if (spriteCloud1.getPosition().x > vm.width)
+            else
             {
-                cloud1Active = false;
+                spriteBee.setPosition(spriteBee.getPosition().x - (beeSpeed * dt.asSeconds()), spriteBee.getPosition().y);
+                if (spriteBee.getPosition().x < -100)
+                {
+                    beeActive = false;
+                }
             }
-        }
 
-        if (!cloud2Active)
-        {
-            cloud2Speed = (rand() % 200) + 200;
-            float height = (rand() % 300) * scaleHeight;
-
-            spriteCloud2.setPosition(-200, height * scaleHeight);
-            cloud2Active = true;
-        }
-        else
-        {
-            spriteCloud2.setPosition(spriteCloud2.getPosition().x + (cloud2Speed * dt.asSeconds()), spriteCloud2.getPosition().y);
-            if (spriteCloud2.getPosition().x > vm.width)
+            if (!cloud1Active)
             {
-                cloud2Active = false;
+                cloud1Speed = (rand() % 50);
+                float height = (rand() % 300) * scaleHeight;
+
+                spriteCloud1.setPosition(-200, height * scaleHeight);
+                cloud1Active = true;
             }
-        }
-
-        if (!cloud3Active)
-        {
-            cloud3Speed = (rand() % 200) + 200;
-            float height = (rand() % 300) * scaleHeight;
-
-            spriteCloud3.setPosition(-200, height * scaleHeight);
-            cloud3Active = true;
-        }
-        else
-        {
-            spriteCloud3.setPosition(spriteCloud3.getPosition().x + (cloud3Speed * dt.asSeconds()), spriteCloud3.getPosition().y);
-            if (spriteCloud3.getPosition().x > vm.width)
+            else
             {
-                cloud3Active = false;
+                spriteCloud1.setPosition(spriteCloud1.getPosition().x + (cloud1Speed * dt.asSeconds()), spriteCloud1.getPosition().y);
+                if (spriteCloud1.getPosition().x > vm.width)
+                {
+                    cloud1Active = false;
+                }
             }
+
+            if (!cloud2Active)
+            {
+                cloud2Speed = (rand() % 50);
+                float height = (rand() % 300) * scaleHeight;
+
+                spriteCloud2.setPosition(-200, height * scaleHeight);
+                cloud2Active = true;
+            }
+            else
+            {
+                spriteCloud2.setPosition(spriteCloud2.getPosition().x + (cloud2Speed * dt.asSeconds()), spriteCloud2.getPosition().y);
+                if (spriteCloud2.getPosition().x > vm.width)
+                {
+                    cloud2Active = false;
+                }
+            }
+
+            if (!cloud3Active)
+            {
+                cloud3Speed = (rand() % 50);
+                float height = (rand() % 300) * scaleHeight;
+
+                spriteCloud3.setPosition(-200, height * scaleHeight);
+                cloud3Active = true;
+            }
+            else
+            {
+                spriteCloud3.setPosition(spriteCloud3.getPosition().x + (cloud3Speed * dt.asSeconds()), spriteCloud3.getPosition().y);
+                if (spriteCloud3.getPosition().x > vm.width)
+                {
+                    cloud3Active = false;
+                }
+            }
+
         }
 
         // DRAW SCENE
